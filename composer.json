@@ -1,0 +1,26 @@
+{
+    "name": "scotthuangzl/yii2-export2excel",
+    "description": "A behavior to export yii2 query to excel and auto download",
+    "type": "yii2-extension",
+    "keywords": ["scott huang","hzl","yii2","extension","export2excel","behavior","download"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Scott Huang",
+            "email": "zhiliang.huang@gmail.com"
+        }
+    ],
+  "support": {
+    "issues": "https://github.com/ScottHuangZL/yii2-export2excel/issues",
+    "source": "https://github.com/ScottHuangZL/yii2-export2excel"
+  },
+    "minimum-stability": "dev",
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "scotthuangzl\\export2excel\\": ""
+        }
+    }
+}
