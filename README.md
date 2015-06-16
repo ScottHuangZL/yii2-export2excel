@@ -1,4 +1,4 @@
-Google Chart
+Yii2 Export2Excel
 ============
 A behavior to export Yii2 query to excel and auto download
 
