@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require scotthuangzl/yii2-export2excelt "dev-master"
+php composer.phar require scotthuangzl/yii2-export2excel "dev-master"
 ```
 
 or add
 
 ```
-"scotthuangzl/yii2-export2excelt": "dev-master"
+"scotthuangzl/yii2-export2excel": "dev-master"
 ```
 
 to the require section of your `composer.json` file.
@@ -58,8 +58,9 @@ In any of your controller:
 	
 	//In any of your actions:
 	public function actionYoursAnyAction(){
-		//test export2excel behavior
-        $excel_data = HzlUtil::excelDataFormat(EOPStatus::find()->asArray()->all()); //此处使用了上篇文章中说道的数据格式化类
+//... your other code
+        //test export2excel behavior
+        $excel_data = Export2ExcelBehavior::excelDataFormat(EOPStatus::find()->asArray()->all());
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
         $excel_content = array(
@@ -68,13 +69,13 @@ In any of your controller:
                 'sheet_title' => $excel_title,
                 'ceils' => $excel_ceils,
                 'freezePane' => 'B2',
-                'headerColor' => HzlUtil::getCssClass("header"),
+                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => array(
-                    'id' => HzlUtil::getCssClass('blue'),
-                    'Status_Description' => HzlUtil::getCssClass('grey'),
+                    'id' => Export2ExcelBehavior::getCssClass('blue'),
+                    'Status_Description' => Export2ExcelBehavior::getCssClass('grey'),
                 ), //define each column's cssClass for header line only.  You can set as blank.
-                'oddCssClass' => HzlUtil::getCssClass("odd"),
-                'evenCssClass' => HzlUtil::getCssClass("even"),
+                'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
             ),
             array(
                 'sheet_name' => 'Important Note',
@@ -86,9 +87,8 @@ In any of your controller:
             ),
         );
         $excel_file = "testYii2Save2Excel";
-        echo "I am here1";
         $this->export2excel($excel_content, $excel_file);
-        echo "I am here2";
+//... your other code
 	}
 	
 ```
