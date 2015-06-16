@@ -194,6 +194,7 @@ class Export2ExcelBehavior extends Behavior
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $tempDir = Yii::getAlias('@webroot') . '/uploads/temp/';
         if (!is_dir($tempDir)) {
+            mkdir(Yii::getAlias('@webroot').'/uploads');
             mkdir($tempDir);
             chmod($tempDir, 0755);
 // the default implementation makes it under 777 permission, which you could possibly change recursively before deployment, but here's less of a headache in case you don't
