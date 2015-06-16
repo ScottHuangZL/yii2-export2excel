@@ -198,7 +198,9 @@ class Export2ExcelBehavior extends Behavior
             chmod($tempDir, 0755);
 // the default implementation makes it under 777 permission, which you could possibly change recursively before deployment, but here's less of a headache in case you don't
         }
-        $file_name = $tempDir . yii::$app->user->identity->username . '-' . str_replace(array('/', '*', '?', '\\', ':', '[', ']'), array('_', '_', '_', '_', '_', '_', '_'), $excel_file) . '-' . date('Ymd-His') . '.xlsx';
+        $file_name = $tempDir .
+//            yii::$app->user->identity->username . '-' .
+            str_replace(array('/', '*', '?', '\\', ':', '[', ']'), array('_', '_', '_', '_', '_', '_', '_'), $excel_file) . '-' . date('Ymd-His') . '.xlsx';
 
         $objWriter->save($file_name);
         return $file_name;
