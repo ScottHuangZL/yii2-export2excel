@@ -25,8 +25,6 @@ to the require section of your `composer.json` file.
 Usage
 -----
 
-Please create uploads\temp folder in your webroot folder, usually it should be yoursite\web\uploads\temp in case you use basic template.
-
 In any of your controller:
 
 
