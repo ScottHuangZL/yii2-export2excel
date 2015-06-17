@@ -36,6 +36,8 @@ In any of your controller:
 		//new add export2excel behaviors
 				'export2excel' => [
 					'class' => Export2ExcelBehavior::className(),
+	                //            'prefixStr' => yii::$app->user->identity->username,
+                    //            'suffixStr' => date('Ymd-His'),
 				],
 		}
 	
