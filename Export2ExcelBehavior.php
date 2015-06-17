@@ -5,6 +5,7 @@
  * Time: 5:16 PM
  */
 namespace scotthuangzl\export2excel;
+
 use yii\base\Behavior;
 use yii\helpers\Url;
 use Yii;
@@ -16,8 +17,25 @@ use \PHPExcel_Writer_IWriter;
 use \PHPExcel_Worksheet;
 use \PHPExcel_Style;
 
+// you can manual add below line to your vendor/composer/autoload_psr4.php if not install this widget from composer
+//'scotthuangzl\\export2excel\\' => array($vendorDir . '/scotthuangzl/yii2-export2excel'),
+
+
+
 class Export2ExcelBehavior extends Behavior
 {
+
+    /**
+     * @var string  you can set use logged username , it will add in the file as prefix
+     * usually you can set as yii::$app->user->identity->username
+     */
+    public $prefixStr = '';
+
+    /**
+     * @var string
+     */
+    public $suffixStr = ''; //default will be date('Ymd-His')
+
 
     /**
      * Return query contents to predefined sheet format
@@ -64,7 +82,7 @@ class Export2ExcelBehavior extends Behavior
      * @return bool|string
      * @throws Exception
      */
-    public static function save2Excel($excel_content, $excel_file
+    public function save2Excel($excel_content, $excel_file
         , $excel_props = array('creator' => 'WWSP Tool'
         , 'title' => 'WWSP_Tracking EXPORT EXCEL'
         , 'subject' => 'WWSP_Tracking EXPORT EXCEL'
@@ -105,21 +123,26 @@ class Export2ExcelBehavior extends Behavior
         $style_obj->applyFromArray($style_array);
 
 //开始执行EXCEL数据导出
+        //start export excel
         for ($i = 0; $i < count($excel_content); $i++) {
             $each_sheet_content = $excel_content[$i];
             if ($i == 0) {
 //默认会创建一个sheet页，故不需在创建
+                //There will be a default sheet, so no need create
                 $objPHPExcel->setActiveSheetIndex(intval(0));
                 $current_sheet = $objPHPExcel->getActiveSheet();
             } else {
 //创建sheet
+                //create sheet
                 $objPHPExcel->createSheet();
                 $current_sheet = $objPHPExcel->getSheet($i);
             }
 //设置sheet title
+            //set title
             $current_sheet->setTitle(str_replace(array('/', '*', '?', '\\', ':', '[', ']'), array('_', '_', '_', '_', '_', '_', '_'), substr($each_sheet_content['sheet_name'], 0, 30))); //add by Scott
             $current_sheet->getColumnDimension()->setAutoSize(true); //Scott, set column autosize
 //设置sheet当前页的标题
+            //set sheet's current title
             $_columnIndex = 'A';
 
             $lineRange = "A1:" . self::excelColumnName(count($each_sheet_content['sheet_title'])) . "1";
@@ -161,6 +184,7 @@ class Export2ExcelBehavior extends Behavior
                 $current_sheet->freezePane($each_sheet_content['freezePane']);
             }
 //写入sheet页面内容
+            //write sheet content
             if (array_key_exists('ceils', $each_sheet_content) && !empty($each_sheet_content['ceils'])) {
                 for ($row = 0; $row < count($each_sheet_content['ceils']); $row++) {
                     //setting row css
@@ -192,16 +216,23 @@ class Export2ExcelBehavior extends Behavior
 
         }
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $tempDir = Yii::getAlias('@webroot') . '/uploads/temp/';
+        $tempDir_ = $tempDir = Yii::getAlias('@webroot') . '/uploads/';
+        $tempDir = $tempDir_ . 'temp/';
         if (!is_dir($tempDir)) {
-            mkdir(Yii::getAlias('@webroot').'/uploads');
+            if (!is_dir($tempDir_)) {
+                mkdir($tempDir_);
+            }
             mkdir($tempDir);
             chmod($tempDir, 0755);
 // the default implementation makes it under 777 permission, which you could possibly change recursively before deployment, but here's less of a headache in case you don't
         }
         $file_name = $tempDir .
-//            yii::$app->user->identity->username . '-' .
-            str_replace(array('/', '*', '?', '\\', ':', '[', ']'), array('_', '_', '_', '_', '_', '_', '_'), $excel_file) . '-' . date('Ymd-His') . '.xlsx';
+//            yii::$app->user->identity->username . '-' .  //hide this line , you can turn on by yourself.
+            ($this->prefixStr ? $this->prefixStr . '-' : '') .
+            str_replace(array('/', '*', '?', '\\', ':', '[', ']'), array('_', '_', '_', '_', '_', '_', '_'), $excel_file) .
+            ($this->suffixStr ? '-' . $this->suffixStr : '-' . date('Ymd-His')) .
+//            '-' . date('Ymd-His').
+            '.xlsx';
 
         $objWriter->save($file_name);
         return $file_name;
@@ -218,7 +249,8 @@ class Export2ExcelBehavior extends Behavior
      * @param string $code
      * @return array
      */
-    public static function getCssClass($code = '')
+    public
+    static function getCssClass($code = '')
     {
         $cssClass =
             array(
@@ -244,6 +276,14 @@ class Export2ExcelBehavior extends Behavior
     }
 
 
+    /**
+     * Will invoke DownloadAction
+     *
+     * @param $excel_content
+     * @param $excel_file
+     * @param array $excel_props
+     * @return bool
+     */
     public function export2Excel($excel_content, $excel_file
         , $excel_props = array('creator' => 'WWSP Tool'
         , 'title' => 'WWSP_Tracking EXPORT EXCEL'
