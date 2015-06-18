@@ -97,5 +97,5 @@ In any of your controller:
 
 Sample picture
 -----
-You also can find the demo result from:
-
+Please find from:
+[Yii2 Export2Excel Extension](http://www.yiiframework.com/extension/yii2-export2excel/).
