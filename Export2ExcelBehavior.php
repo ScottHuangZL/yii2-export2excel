@@ -307,7 +307,7 @@ class Export2ExcelBehavior extends Behavior
 
 
         if(empty($excel_content)){
-            $excelName = $excel_file;
+            $excelName = str_replace(['..','/','\\'],['','',''],$excel_file);
         }else{
             $excelName = self::save2Excel($excel_content, $excel_file, $excel_props);
         }
