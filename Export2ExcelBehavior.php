@@ -287,20 +287,33 @@ class Export2ExcelBehavior extends Behavior
      * @return bool
      */
     public function export2Excel($excel_content, $excel_file
-        , $excel_props = array('creator' => 'WWSP Tool'
-        , 'title' => 'WWSP_Tracking EXPORT EXCEL'
-        , 'subject' => 'WWSP_Tracking EXPORT EXCEL'
-        , 'desc' => 'WWSP_Tracking EXPORT EXCEL'
-        , 'keywords' => 'WWSP Tool Generated Excel, Author: Scott Huang'
-        , 'category' => 'WWSP_Tracking EXPORT EXCEL'))
+        , $excel_props = [])
     {
+
         if (!is_array($excel_content)) {
             return FALSE;
         }
         if (empty($excel_file)) {
             return FALSE;
         }
-        $excelName = self::save2Excel($excel_content, $excel_file, $excel_props);
+
+
+        $excel_props = array_merge(array('creator' => 'WWSP Tool'
+        , 'title' => 'WWSP_Tracking EXPORT EXCEL'
+        , 'subject' => 'WWSP_Tracking EXPORT EXCEL'
+        , 'desc' => 'WWSP_Tracking EXPORT EXCEL'
+        , 'keywords' => 'WWSP Tool Generated Excel, Author: Scott Huang'
+        , 'category' => 'WWSP_Tracking EXPORT EXCEL'),$excel_props);
+
+
+        if(empty($excel_content)){
+            $excelName = $excel_file;
+        }else{
+            $excelName = self::save2Excel($excel_content, $excel_file, $excel_props);
+        }
+
+//        echo "<BR><BR><BR>".$excelName."<BR>"."temp/".basename($excelName);
+//        yii::$app->end();
         if ($excelName) {
             return $this->owner->redirect([Url::to('download'), "file_name" => 'temp/' . basename($excelName)
                 , "file_type" => 'excel'
